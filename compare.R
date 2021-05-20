@@ -1,7 +1,10 @@
 library(GMSE)
 
+# repo
+repo <- "~/Desktop/PhD/GitKraken/TrajectoryPrediction-test/"
+
 # case parameters
-{rep = 10
+{rep = 100
 ts = 20
 ldim = 200
 stkh = 40
@@ -22,6 +25,7 @@ regular <- gmse_replicates(replicates = rep,
                           manager_sense = 0.15, manage_target = trgt,
                           plotting = FALSE)
 # regular <- gmse(time_max = 5, mem_prv_observ = FALSE, traj_pred = FALSE, plotting = FALSE, land_ownership = TRUE, stakeholders = 5)
+write.csv(regular, file = paste(repo,"regular.csv", sep = ""), row.names = FALSE)
 
 pred <- gmse_replicates(replicates = rep,
                         time_max = ts, mem_prv_observ = TRUE, traj_pred = TRUE,
@@ -32,4 +36,7 @@ pred <- gmse_replicates(replicates = rep,
                         manager_sense = 0.15, manage_target = trgt,
                         plotting = FALSE)
 # pred <- gmse(time_max = 5, mem_prv_observ = TRUE, traj_pred = TRUE, plotting = FALSE, land_ownership = TRUE, stakeholders = 5, scaring = FALSE)
+write.csv(pred, file = paste(repo,"pred.csv", sep = ""), row.names = FALSE)
 
+ext_reg <- length(which(regular[,3] == 0))/dim(regular)[1]
+ext_prd <- length(which(pred[,3] == 0))/dim(pred)[1]
