@@ -46,7 +46,7 @@ boot_sd_ci <- function(x, confidence = 95, itr = 1000) {
   
 }
 
-predVSreg_stats <- function(df, ts, omit.extinction = FALSE) {
+predVSreg_stats <- function(df, ts, omit.extinction = c(TRUE,FALSE)) {
   
   df <- as.data.frame(df)
   
@@ -191,3 +191,46 @@ predVSreg_stats <- function(df, ts, omit.extinction = FALSE) {
   return(res_tab)
   
 } # end function
+
+predVSreg.stats <- predVSreg_stats(df = predVSregular.res, ts = 20, omit.extinction = FALSE)
+predVSreg.stats_woExt <- predVSreg_stats(df = predVSregular.res, ts = 20, omit.extinction = TRUE)
+
+#### Plots ####
+library(ggplot2)
+
+predVSregular.res <- read.csv("predVSregular-res.csv", header = TRUE, stringsAsFactors = TRUE, sep = "\t")
+
+predVSregular.res$fin_yield <- predVSregular.res$fin_yield/40000
+predVSregular.res$fin_yield_bflast <- predVSregular.res$fin_yield_bflast/40000
+
+for(i in 1:dim(predVSregular.res)[1]) {
+  if(predVSregular.res[i,3] == 1) {
+    predVSregular.res[i,5] <- -1
+    predVSregular.res[i,7] <- 1
+  }
+}
+
+# violin jitter plots
+# NOT ADAPTED BECAUSE OF EXTINCTIONS
+
+# prepare data
+d <- as.data.frame(predVSregular.res)
+d$pred <- as.factor(d$pred)
+
+p <- ggplot(d, aes(x=pred, y=act_dev)) + geom_violin()
+
+# p <- p + geom_violin(trim = F)
+
+# p <- p + geom_boxplot(width = 0.1)
+
+p <- p + stat_summary(fun.data=mean_cl_boot, mult=1, geom="pointrange", color="red") +
+    geom_jitter(shape=16, position=position_jitter(0.2))
+p
+
+# Boxplots
+
+boxplot(d$act_dev*100 ~ as.factor(d$pred))
+points(x=dd$prd, y = dd$ext_prob)
+# NOT ADAPTED EITHER BECAUSE TOO LARGE VARIATION BC OF EXTINCTIONS
+# BEST WAY: MEANS + 95%CI
+# HOW TO MAKE A BLANK FACTORIAL X-AXIS? XLIM = C(-0.5,1.5) BUT MARKING ONLY INTEGERS? 

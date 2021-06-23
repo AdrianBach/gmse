@@ -78,7 +78,7 @@ trajVSpred_replicate <- function(ts = 20, rep = 100, freq = 1,
       res[k,4] <- dim(sim$resource[[final_ts-1]])[1]/sim$action[[1]][1,5,1] - 1
      
       # Users total final yield at ts before last
-      res[k,6] <- sum(sim$agents[[final_ts-1]][,16])
+      res[k,6] <- sum(sim$agents[[final_ts-1]][,16])/40000
       
       # Maximum difference between Users yield at ts before last
       res[k,8] <- (max(sim$agents[[final_ts-1]][,16]) - min(sim$agents[[final_ts-1]][-1,16]))/max(sim$agents[[final_ts-1]][,16])
@@ -117,10 +117,10 @@ trajVSpred_replicate <- function(ts = 20, rep = 100, freq = 1,
       if (res[k,3] != 0) {
         
         # Resource actual pop deviation from target at last ts
-        res[k,5] <- -100
+        res[k,5] <- -1
         
         # Users total final yield at last ts
-        res[k,7] <- 100
+        res[k,7] <- 1
         
         # Maximum difference between Users yield at last ts
         res[k,9] <- 0
@@ -130,7 +130,7 @@ trajVSpred_replicate <- function(ts = 20, rep = 100, freq = 1,
         for (i in 1:(final_ts-1)){
             ssd <- ssd + abs(dim(sim$resource[[i]])[1]-sim$paras[i,7])
         }
-        res[k,10] <- ssd + abs(-100)
+        res[k,10] <- ssd + abs(-1)
       }
       
       # If extinction did not occured
@@ -139,7 +139,7 @@ trajVSpred_replicate <- function(ts = 20, rep = 100, freq = 1,
           res[k,5] <- dim(sim$resource[[final_ts]])[1]/sim$action[[1]][1,5,1] - 1
           
           # Users total final yield at last ts
-          res[k,7] <- sum(sim$agents[[final_ts]][,16])
+          res[k,7] <- sum(sim$agents[[final_ts]][,16])/40000
           
           # Maximum difference between Users yield at last ts
           res[k,9] <- (max(sim$agents[[final_ts]][,16]) - min(sim$agents[[final_ts]][-1,16]))/max(sim$agents[[final_ts]][,16])
